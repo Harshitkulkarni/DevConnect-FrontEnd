@@ -19,12 +19,18 @@ const Feed = () => {
 
   const feedData = useSelector((store) => store.feed);
   //console.log(feedData);
+  if (!feedData) return;
+
+  if (feedData.length <= 0)
+    return (
+      <h1 className="text-center text-3xl mt-10">No More Feed is Avilable</h1>
+    );
 
   return (
     feedData && (
       <div className="h-screen flex justify-center ">
         <div className="mt-28  w-6/12">
-          <UserCard data={feedData[1]} />
+          <UserCard data={feedData[0]} />
         </div>
       </div>
     )

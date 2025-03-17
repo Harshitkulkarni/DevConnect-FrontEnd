@@ -7,7 +7,7 @@ const Profile = () => {
 
   return (
     user && (
-      <div>
+      <div className="">
         <EditProfile user={user} />
       </div>
     )
