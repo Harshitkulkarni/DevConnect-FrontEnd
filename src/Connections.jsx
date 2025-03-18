@@ -13,12 +13,9 @@ const Connections = () => {
 
   const fetchConnections = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:1008/user/view/connections",
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.get("/api/user/view/connections", {
+        withCredentials: true,
+      });
       dispatch(addConnections(res.data.data));
     } catch (err) {
       console.error("Failed to fetch connections:", err);

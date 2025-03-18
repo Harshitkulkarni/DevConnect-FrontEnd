@@ -10,7 +10,7 @@ const NavBar = () => {
   const user = useSelector((store) => store.user);
   const handleLogoutBtn = async () => {
     const logout = await axios.post(
-      "http://localhost:1008/logout",
+      "/api/logout",
       {},
       {
         withCredentials: true,

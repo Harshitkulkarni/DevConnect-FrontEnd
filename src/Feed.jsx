@@ -7,7 +7,7 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const dispatch = useDispatch();
   const fetchfeed = async () => {
-    const res = await axios.get("http://localhost:1008/feed", {
+    const res = await axios.get("/api/feed", {
       withCredentials: true,
     });
     //console.log(res.data);

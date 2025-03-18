@@ -26,11 +26,9 @@ const EditProfile = ({ user }) => {
 
   const handleEditProfile = async () => {
     try {
-      const res = await axios.patch(
-        "http://localhost:1008/profile/edit",
-        formData,
-        { withCredentials: true }
-      );
+      const res = await axios.patch("/api/profile/edit", formData, {
+        withCredentials: true,
+      });
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
       setTimeout(() => {

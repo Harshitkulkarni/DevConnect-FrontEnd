@@ -14,12 +14,9 @@ const Request = () => {
   // Fetch all requests
   const fetchRequest = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:1008/user/request/recived",
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.get("/api/user/request/recived", {
+        withCredentials: true,
+      });
       dispatch(addRequest(res.data.data));
     } catch (err) {
       console.error("Error fetching requests:", err);
@@ -33,7 +30,7 @@ const Request = () => {
   const handleRequest = async (status, id) => {
     try {
       await axios.post(
-        `http://localhost:1008/request/review/${status}/${id}`,
+        `/api/request/review/${status}/${id}`,
         {},
         { withCredentials: true }
       );
