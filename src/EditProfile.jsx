@@ -3,6 +3,7 @@ import UserCard from "./UserCard";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "./utils/userSlice";
+import { baseURL } from "../constant";
 
 const EditProfile = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const EditProfile = ({ user }) => {
 
   const handleEditProfile = async () => {
     try {
-      const res = await axios.patch("/api/profile/edit", formData, {
+      const res = await axios.patch(baseURL + "/profile/edit", formData, {
         withCredentials: true,
       });
       dispatch(addUser(res?.data?.data));
