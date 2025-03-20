@@ -75,11 +75,6 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col items-center h-screen">
-      <div>
-        <h1 className="font-bold text-4xl text-red-400 ">
-          {message[0]?.firstName}
-        </h1>
-      </div>
       <div className="relative w-6/12 border h-3/4 border-gray-400 rounded-lg  mt-4 flex flex-col">
         {/* Messages Section */}
 
