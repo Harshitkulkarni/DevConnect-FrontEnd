@@ -49,8 +49,8 @@ const Login = () => {
 
   return (
     <div className="flex justify-center mt-8">
-      <div className="card bg-base-100 w-4/12 shadow-xl">
-        <div className="card-body">
+      <div className="card bg-base-100 w-4/12  shadow-xl">
+        <div className="card-body ">
           <h2 className="card-title">{isLoginForm ? "Sign Up" : "Log In"}</h2>
           <div>
             {isLoginForm && (
@@ -161,21 +161,43 @@ const Login = () => {
           <p className="text-red-500  p-0">{error}</p>
           <div className="card-actions justify-end">
             <button
-              className="btn btn-primary"
+              className="btn btn-primary px-20"
               onClick={isLoginForm ? handleSignup : handleLogin}
             >
               {isLoginForm ? "Sign Up" : "Log In"}
             </button>
           </div>
           <p
-            className=" bg-slate-100 w-52 -mt-10 p-2 rounded-lg cursor-pointer"
+            className=" bg-slate-100 w-64 -mt-16 p-2 rounded-lg cursor-pointer"
             onClick={() => {
               setIsLoginForm((value) => !value);
             }}
           >
-            {isLoginForm
-              ? " Exsisting User Login Hear"
-              : "New User Sign Up Hear"}
+            {isLoginForm ? (
+              <div className="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  className="h-8 w-8 m-2 opacity-70"
+                >
+                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                </svg>
+                <h1> Exsisting User Login Hear </h1>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  className="h-8 w-8 m-2  opacity-70"
+                >
+                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                </svg>
+                <h1> New User SignUp Here </h1>
+              </div>
+            )}
           </p>
         </div>
       </div>
