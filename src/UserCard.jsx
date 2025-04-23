@@ -3,7 +3,6 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "./utils/feedSlice";
 import { baseURL } from "../constant";
-import TinderCard from "react-tinder-card";
 
 const UserCard = ({ data }) => {
   const dispatch = useDispatch();
