@@ -9,12 +9,14 @@ const EditProfile = ({ user }) => {
   const [formData, setFormData] = useState({
     firstName: user.firstName || "",
     lastName: user.lastName || "",
-    photoURL: user.photoURL || "",
     age: user.age || "",
     gender: user.gender || "",
     bio: user.bio || "",
     skills: user.skills || "",
   });
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(user.photoURL || "");
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
 
@@ -25,16 +27,37 @@ const EditProfile = ({ user }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    if (file) {
+      setPreviewURL(URL.createObjectURL(file));
+    }
+    // Capture file from input
+  };
+
   const handleEditProfile = async () => {
     try {
-      const res = await axios.patch(baseURL + "/profile/edit", formData, {
-        withCredentials: true,
+      const profileData = new FormData();
+
+      // Append text fields to form data
+      Object.keys(formData).forEach((key) => {
+        profileData.append(key, formData[key]);
       });
+
+      // Append file if available
+      if (selectedFile) {
+        profileData.append("photo", selectedFile);
+      }
+
+      const res = await axios.patch(baseURL + "/profile/edit", profileData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
+      setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update profile");
     }
@@ -49,10 +72,10 @@ const EditProfile = ({ user }) => {
               <div className="card-body">
                 <h2 className="card-title">Edit Profile</h2>
                 <div>
+                  {/* Text Inputs */}
                   {[
                     { label: "First Name", name: "firstName" },
                     { label: "Last Name", name: "lastName" },
-                    { label: "Photo URL", name: "photoURL" },
                     { label: "Age", name: "age" },
                     { label: "Gender", name: "gender" },
                     { label: "Skills", name: "skills" },
@@ -71,6 +94,21 @@ const EditProfile = ({ user }) => {
                       />
                     </label>
                   ))}
+
+                  {/* File Input */}
+                  <label className="form-control">
+                    <div className="label">
+                      <span className="label-text">Profile Image</span>
+                    </div>
+                    <input
+                      type="file"
+                      name="photo"
+                      onChange={handleFileChange}
+                      className="file-input file-input-bordered w-full max-w-xs"
+                    />
+                  </label>
+
+                  {/* Bio Input */}
                   <label className="form-control">
                     <div className="label">
                       <span className="label-text">Your bio</span>
@@ -84,7 +122,9 @@ const EditProfile = ({ user }) => {
                     ></textarea>
                   </label>
                 </div>
+
                 <p className="text-red-500 mt-4">{error}</p>
+
                 <div className="card-actions justify-center">
                   <button
                     className="btn btn-primary"
@@ -98,9 +138,10 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
         <div className="w-full flex h-1/2 justify-center my-24 mx-10">
-          <UserCard data={formData} />
+          <UserCard data={{ ...formData, previewURL }} />
         </div>
       </div>
+
       {showToast && (
         <div className="toast toast-top toast-center">
           <div className="alert alert-success">

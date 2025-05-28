@@ -7,7 +7,17 @@ import { baseURL } from "../constant";
 const UserCard = ({ data }) => {
   const dispatch = useDispatch();
   // console.log(data);
-  const { _id, firstName, lastName, age, gender, bio, skills, photoURL } = data;
+  const {
+    _id,
+    firstName,
+    lastName,
+    age,
+    gender,
+    bio,
+    skills,
+    photoURL,
+    previewURL,
+  } = data;
 
   const handleSendRequest = async (status, id) => {
     const res = await axios.post(
@@ -27,7 +37,7 @@ const UserCard = ({ data }) => {
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
       <figure className="w-6/12 h-max">
-        <img src={photoURL} alt="Album" />
+        <img src={photoURL || previewURL} alt="Album" />
       </figure>
       <div className="card-body">
         <h1 className="card-title ">{firstName + " " + lastName}</h1>

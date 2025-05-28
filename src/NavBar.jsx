@@ -84,6 +84,9 @@ const NavBar = () => {
                   </button>
                 </li>
                 <li>
+                  <button onClick={() => navigate("/chat")}>Chats</button>
+                </li>
+                <li>
                   <button onClick={() => navigate("/request")}>
                     Friends Request
                   </button>

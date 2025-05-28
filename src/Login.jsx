@@ -48,7 +48,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center mt-8">
+    <div className="flex flex-row justify-center mt-8 gap-4">
+      <figure className="w-1/4">
+        <img
+          className=" rounded-md shadow-md"
+          src="https://app.kodnest.com/v2/login5.png"
+          alt="Shoes"
+        />
+      </figure>
       <div className="card bg-base-100 w-4/12  shadow-xl">
         <div className="card-body ">
           <h2 className="card-title">{isLoginForm ? "Sign Up" : "Log In"}</h2>

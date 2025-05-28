@@ -31,7 +31,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMessage();
-  }, []);
+  }, [toUserId]);
 
   useEffect(() => {
     if (!fromUserId || !toUserId) return;

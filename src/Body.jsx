@@ -21,8 +21,9 @@ const Body = () => {
       dispatch(addUser(res.data));
     } catch (error) {
       if (error.response?.status === 401) {
-        // Use response status for error checking
-        navigate("/login");
+        if (window.location.pathname !== "/") {
+          navigate("/login");
+        }
       } else {
         console.error("Failed to fetch user data:", error);
       }
