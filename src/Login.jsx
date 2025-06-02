@@ -1,9 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "./utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { baseURL } from "../constant";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import CollaborationSvg from "./components/CollaborationSvg";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -12,8 +14,9 @@ const Login = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
-  const [isLoginForm, setIsLoginForm] = useState(false);
+  const [isLoginForm, setIsLoginForm] = useState(true);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -26,185 +29,186 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-
-      //console.log(res.data);
       dispatch(addUser(res.data));
       return navigate("/feed");
     } catch (error) {
-      //console.log(error);
       setError(error?.response?.data);
     }
   };
 
   const handleSignup = async () => {
-    const res = await axios.post(
-      baseURL + "/signup",
-      { firstName, lastName, password, email, phone },
-      { withCredentials: true }
-    );
-    console.log(res.data);
-    dispatch(addUser(res.data.data));
-    return navigate("/profile");
+    try {
+      const res = await axios.post(
+        baseURL + "/signup",
+        { firstName, lastName, password, email, phone },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data.data));
+      return navigate("/profile");
+    } catch (error) {
+      setError(error?.response?.data);
+    }
   };
 
   return (
-    <div className="flex flex-row justify-center mt-8 gap-4">
-      <figure className="w-1/4">
-        <img
-          className=" rounded-md shadow-md"
-          src="https://app.kodnest.com/v2/login5.png"
-          alt="Shoes"
-        />
-      </figure>
-      <div className="card bg-base-100 w-4/12  shadow-xl">
-        <div className="card-body ">
-          <h2 className="card-title">{isLoginForm ? "Sign Up" : "Log In"}</h2>
-          <div>
-            {isLoginForm && (
-              <>
-                <label className="input input-bordered flex items-center py-2 my-5 gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="h-4 w-4 opacity-70"
-                  >
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                  </svg>
+    <div className="min-h-screen flex">
+      {/* Left Section - Illustration */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 to-indigo-400 items-center justify-center p-12">
+        <div className="max-w-lg">
+          <div className="w-full h-64">
+            <CollaborationSvg />
+          </div>
+          <div className="mt-8">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Connect. Collaborate. Create.
+            </h2>
+            <p className="text-indigo-100 text-lg">
+              Join our community of developers and build amazing things
+              together.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Section - Form */}
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <Link to="/" className="block mb-8">
+            <span className="text-2xl font-bold text-indigo-600">
+              👨‍💻 DevConnect
+            </span>
+          </Link>
+
+          {/* Welcome Text */}
+          <h1 className="text-3xl font-bold text-neutral mb-2">
+            {isLoginForm ? "Welcome Back!" : "Create Account"}
+          </h1>
+          <p className="text-neutral-600 mb-8">
+            {isLoginForm
+              ? "Let's build something amazing together!"
+              : "Join our community of developers"}
+          </p>
+
+          {/* Form */}
+          <div className="space-y-6">
+            {!isLoginForm && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral mb-2">
+                    First Name
+                  </label>
                   <input
                     type="text"
-                    className="grow"
-                    placeholder="First Name"
                     value={firstName}
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                    }}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full h-12 px-4 border-2 border-neutral-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                   />
-                </label>
-                <label className="input input-bordered flex items-center py-2 my-5 gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="h-4 w-4 opacity-70"
-                  >
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                  </svg>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral mb-2">
+                    Last Name
+                  </label>
                   <input
                     type="text"
-                    className="grow"
-                    placeholder="Last Name"
                     value={lastName}
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                    }}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full h-12 px-4 border-2 border-neutral-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                   />
-                </label>
-                <label className="input input-bordered flex items-center py-2 my-5 gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="h-4 w-4 opacity-70"
-                  >
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                  </svg>
-                  <input
-                    type="text"
-                    className="grow"
-                    placeholder="Phone Number"
-                    value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                  />
-                </label>
-              </>
+                </div>
+              </div>
             )}
-            <label className="input input-bordered flex items-center py-2 my-5 gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-                <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-              </svg>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral mb-2">
+                Email Address
+              </label>
               <input
-                type="text"
-                className="grow"
-                placeholder="Email"
+                type="email"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-12 px-4 border-2 border-neutral-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
               />
-            </label>
-            <label className="input input-bordered flex items-center py-2 my-5 gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                  clipRule="evenodd"
+            </div>
+
+            {!isLoginForm && (
+              <div>
+                <label className="block text-sm font-medium text-neutral mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full h-12 px-4 border-2 border-neutral-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                 />
-              </svg>
-              <input
-                type="password"
-                className="grow"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </label>
-          </div>
-          <p className="text-red-500  p-0">{error}</p>
-          <div className="card-actions justify-end">
-            <button
-              className="btn btn-primary px-20"
-              onClick={isLoginForm ? handleSignup : handleLogin}
-            >
-              {isLoginForm ? "Sign Up" : "Log In"}
-            </button>
-          </div>
-          <div
-            className=" bg-slate-100 w-52 -mt-16 p-2 rounded-lg cursor-pointer"
-            onClick={() => {
-              setIsLoginForm((value) => !value);
-            }}
-          >
-            {isLoginForm ? (
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-8 w-8 m-2 opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <h1> Log In 🔑</h1>
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-8 w-8 m-2  opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <h1>Create Account 📝</h1>
               </div>
             )}
+
+            <div>
+              <label className="block text-sm font-medium text-neutral mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-12 px-4 border-2 border-neutral-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="w-5 h-5" />
+                  ) : (
+                    <FaEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {isLoginForm && (
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    /* Handle forgot password */
+                  }}
+                  className="text-sm text-indigo-600 hover:text-indigo-700 hover:underline"
+                >
+                  Forgot your password?
+                </button>
+              </div>
+            )}
+
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm text-center">{error}</p>
+              </div>
+            )}
+
+            <button
+              onClick={isLoginForm ? handleLogin : handleSignup}
+              className="w-full h-12 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center gap-2"
+            >
+              {isLoginForm ? "Log In" : "Create Account"}
+            </button>
+
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  setIsLoginForm(!isLoginForm);
+                  setError("");
+                }}
+                className="text-sm text-neutral-600 hover:text-neutral-800"
+              >
+                {isLoginForm
+                  ? "Don't have an account? Sign up"
+                  : "Already have an account? Log in"}
+              </button>
+            </div>
           </div>
         </div>
       </div>

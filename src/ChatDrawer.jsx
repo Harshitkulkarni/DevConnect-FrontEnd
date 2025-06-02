@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "./utils/connectionsSlice";
 import { baseURL } from "../constant";
-import Chat from "./Chat";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const ChatDrawer = () => {
   const dispatch = useDispatch();
+  const { toUserId } = useParams();
+  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchConnections = async () => {
     try {
       const res = await axios.get(baseURL + "/user/view/connections", {
@@ -22,50 +25,71 @@ const ChatDrawer = () => {
   useEffect(() => {
     fetchConnections();
   }, []);
+
   const allConnections = useSelector((store) => store.connections);
-  //console.log(allConnections);
+  const filteredConnections = allConnections?.filter((connection) =>
+    (connection.firstName + " " + connection.lastName)
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div>
-      <div className="drawer lg:drawer-open">
-        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col items-center justify-center">
-          {/* Page content here */}
-          <label
-            htmlFor="my-drawer-2"
-            className="btn btn-primary drawer-button lg:hidden"
-          >
-            Open drawer
-          </label>
+    <div className="flex flex-col h-full">
+      {/* Search Header */}
+      <div className="p-4 border-b border-base-200">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input input-bordered w-full pl-10"
+          />
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" />
         </div>
-        <div className="drawer-side">
-          <label
-            htmlFor="my-drawer-2"
-            aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
-          <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            {allConnections?.length > 0 ? (
-              allConnections.map((connection) => (
-                <Link to={"/chat/" + connection._id}>
-                  <li key={connection.id}>
-                    <div className="justify-between">
-                      <h1>
-                        {connection.firstName + " " + connection.lastName}
-                      </h1>
-                      <img
-                        alt="User Avatar"
-                        className="rounded-full w-16"
-                        src={connection.photoURL}
-                      />
-                    </div>
-                  </li>
-                </Link>
-              ))
-            ) : (
-              <li>No connections found.</li>
-            )}
-          </ul>
-        </div>
+      </div>
+
+      {/* Conversations List */}
+      <div className="overflow-y-auto flex-1">
+        {filteredConnections?.length > 0 ? (
+          filteredConnections.map((connection) => (
+            <Link
+              key={connection._id}
+              to={"/chat/" + connection._id}
+              className={`block transition-colors hover:bg-base-200 ${
+                toUserId === connection._id ? "bg-base-200" : ""
+              }`}
+            >
+              <div className="flex items-center gap-3 p-4 border-b border-base-200">
+                <div className="avatar online">
+                  <div className="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
+                    <img
+                      src={
+                        connection.photoURL ||
+                        `https://ui-avatars.com/api/?name=${connection.firstName}`
+                      }
+                      alt={connection.firstName}
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-base-content truncate">
+                    {connection.firstName} {connection.lastName}
+                  </h3>
+                  <p className="text-sm text-base-content/60 truncate">
+                    {connection.email}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="p-8 text-center text-base-content/60">
+            {searchTerm
+              ? "No matching conversations found"
+              : "No conversations yet"}
+          </div>
+        )}
       </div>
     </div>
   );

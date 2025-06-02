@@ -13,7 +13,7 @@ const Body = () => {
   const userData = useSelector((store) => store.user);
 
   const fetchUser = async () => {
-    if (userData && userData._id) return; // Ensure user data isn't fetched repeatedly
+    if (userData && userData._id) return;
     try {
       const res = await axios.get(baseURL + "/profile/view", {
         withCredentials: true,
@@ -32,15 +32,15 @@ const Body = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [userData]); // Dependency added to avoid redundant calls
+  }, [userData]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
-      <div className="flex-grow p-5">
+      <main className="flex-1">
         <Outlet />
-      </div>
-      <Footer className="bg-gray-800 text-white py-4" />
+      </main>
+      <Footer />
     </div>
   );
 };

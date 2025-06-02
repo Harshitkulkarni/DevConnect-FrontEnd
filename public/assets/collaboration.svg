@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle fill="#E3F2FD" cx="400" cy="300" r="250"/>
+        <g transform="translate(200, 150)">
+            <!-- Computer Screen -->
+            <rect fill="#FFFFFF" x="0" y="0" width="400" height="250" rx="10"/>
+            <rect fill="#E0E0E0" x="20" y="20" width="360" height="180" rx="5"/>
+            <rect fill="#2196F3" x="40" y="40" width="150" height="20" rx="3"/>
+            <rect fill="#90CAF9" x="40" y="80" width="320" height="10" rx="2"/>
+            <rect fill="#90CAF9" x="40" y="100" width="280" height="10" rx="2"/>
+            <rect fill="#90CAF9" x="40" y="120" width="300" height="10" rx="2"/>
+            
+            <!-- Connected Lines -->
+            <path d="M200,250 L200,300 Q200,350 250,350 L350,350" stroke="#2196F3" stroke-width="3"/>
+            <path d="M200,250 L200,300 Q200,350 150,350 L50,350" stroke="#2196F3" stroke-width="3"/>
+            
+            <!-- Connection Dots -->
+            <circle fill="#2196F3" cx="50" cy="350" r="10"/>
+            <circle fill="#2196F3" cx="350" cy="350" r="10"/>
+            
+            <!-- Code Symbols -->
+            <text x="60" y="55" font-family="monospace" fill="#FFFFFF" font-size="14">&lt;/&gt;</text>
+            
+            <!-- People Icons -->
+            <circle fill="#2196F3" cx="50" cy="350" r="15"/>
+            <circle fill="#2196F3" cx="350" cy="350" r="15"/>
+            <path d="M42,345 L58,345 M50,337 L50,353" stroke="#FFFFFF" stroke-width="2"/>
+            <path d="M342,345 L358,345 M350,337 L350,353" stroke="#FFFFFF" stroke-width="2"/>
+        </g>
+    </g>
+</svg> 

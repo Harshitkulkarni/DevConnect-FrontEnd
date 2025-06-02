@@ -1,98 +1,96 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addConnections } from "./utils/connectionsSlice";
-import { baseURL } from "../constant";
+import axios from "axios";
 import { Link } from "react-router-dom";
+import { baseURL } from "../constant";
 
 const Connections = () => {
-  const dispatch = useDispatch();
-  const allConnections = useSelector((store) => store.connections);
-
-  // State to handle loading and errors
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [allConnections, setAllConnections] = useState([]);
 
   const fetchConnections = async () => {
-    try {
-      const res = await axios.get(baseURL + "/user/view/connections", {
-        withCredentials: true,
-      });
-      dispatch(addConnections(res.data.data));
-    } catch (err) {
-      console.error("Failed to fetch connections:", err);
-      setError("Failed to load connections. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    const res = await axios.get(baseURL + "/connection/view", {
+      withCredentials: true,
+    });
+    setAllConnections(res.data);
   };
 
   useEffect(() => {
     fetchConnections();
-  }, [dispatch]);
+  }, []);
 
-  if (loading) {
+  if (allConnections.length === 0) {
     return (
-      <h1 className="text-4xl text-center mt-24 font-bold text-blue-400">
-        Loading...
-      </h1>
-    );
-  }
-
-  if (error) {
-    return (
-      <h1 className="text-4xl text-center mt-24 font-bold text-red-400">
-        {error}
-      </h1>
-    );
-  }
-
-  if (!allConnections || allConnections.length === 0) {
-    return (
-      <h1 className="text-4xl text-center mt-24 font-bold text-red-400">
-        No Connections Found
-      </h1>
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">
+            No Connections Yet
+          </h1>
+          <p className="text-neutral-600 mt-2">
+            Start connecting with other developers to grow your network
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div>
-      <h1 className="text-4xl text-center mt-10">Friends</h1>
-      {allConnections.map((connection) => (
-        <div key={connection._id} className="flex flex-col items-center">
-          <div className="stats shadow mt-10 w-1/2">
-            <div className="stat">
-              <div className="text-3xl font-bold">
-                {connection.firstName && connection.lastName
-                  ? connection.firstName + " " + connection.lastName
-                  : "Name not available"}
-              </div>
-              <p className="mt-2">{connection.bio || "Bio not available"}</p>
-              <div className="stat-desc mt-2 text-sm">
-                {connection.skills || "No skills listed"}
-              </div>
-              <div className="stat-desc mt-2 text-sm">
-                {connection.age && connection.gender
-                  ? `${connection.age}, ${connection.gender}`
-                  : "Age and gender not specified"}
-              </div>
-              <div className="stat-figure text-secondary">
-                <div className="avatar">
-                  <div className="w-16 rounded-full">
-                    <img
-                      src={connection.photoURL || "defaultImageURL"}
-                      alt={`${connection.firstName || "User"}'s profile`}
-                    />
+    <div className="h-full overflow-auto">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">
+          Your Connections
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {allConnections.map((connection) => (
+            <div
+              key={connection._id}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-base-200 overflow-hidden"
+            >
+              <div className="p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="avatar">
+                    <div className="w-16 h-16 rounded-full ring ring-primary-200 ring-offset-2">
+                      <img
+                        src={connection.photoURL || "/default-avatar.png"}
+                        alt={`${connection.firstName || "User"}'s profile`}
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-neutral">
+                      {connection.firstName && connection.lastName
+                        ? `${connection.firstName} ${connection.lastName}`
+                        : "Name not available"}
+                    </h2>
+                    <p className="text-sm text-neutral-600">
+                      {connection.age && connection.gender
+                        ? `${connection.age}, ${connection.gender}`
+                        : "Profile details not specified"}
+                    </p>
                   </div>
                 </div>
+
+                <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
+                  {connection.bio || "No bio available"}
+                </p>
+
+                <div className="text-sm text-neutral-600 mb-6">
+                  <div className="font-medium mb-1">Skills</div>
+                  <p className="line-clamp-1">
+                    {connection.skills || "No skills listed"}
+                  </p>
+                </div>
+
+                <Link
+                  to={"/chat/" + connection._id}
+                  className="btn w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white border-0"
+                >
+                  Start Chat
+                </Link>
               </div>
-              <Link to={"/chat/" + connection._id}>
-                <button className="btn btn-neutral px-14">Chat</button>
-              </Link>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };
